@@ -1,0 +1,22 @@
+.buttons {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  .buttonGood{
+  background-color: aqua;
+  border-radius: 5px;
+  border:solid 1 px;
+  margin-right: 5px;
+  }
+  .buttonNeutral{
+    background-color: aqua;
+    border-radius: 5px;
+    border:solid 1 px;
+    margin-right: 5px;
+  }
+  .buttonBad{
+    background-color: aqua;
+    border-radius: 5px;
+    border:solid 1 px;
+    margin-right: 5px;
+  }
