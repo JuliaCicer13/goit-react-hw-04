@@ -8,12 +8,26 @@ export default function App () {
  
 const [feedback, setFeedback] = useState(
   {
-    good: 0,
-    neutral: 0,
-    bad: 0
-  }
-)
 
+    feedbackType : {
+      good: 0,
+      neutral: 0,
+      bad: 0
+    }
+   
+  }
+   
+  
+)
+const updateFeedback = (feedbackType) => {
+ setFeedback(
+    ...feedbackType,
+     feedbackType + 1
+  
+  );
+
+
+ }
   return (
     <>
       <Description/>   
