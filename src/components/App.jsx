@@ -1,7 +1,7 @@
 import Feedback from './Feedback.jsx'; 
 import Options from './Options.jsx';
 import Notification from './Notification.jsx';
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 import Description from './Description.jsx';
 
 export default function App () {
@@ -12,37 +12,49 @@ const [feedback, setFeedback] = useState(
       neutral: 0,
       bad: 0 
    
-  }
-   
+  }   
   
 )
-useEffect(() => {
-      feedback + 1
-})
-const totalFeedback = good + neutral + bad;
 
-const updateFeedback = (feedbackType) => {
- setFeedback(
-    ...feedbackType,
-     feedbackType + 1
+const updateFeedback = feedbackType => {
+ setFeedback({
+    ...feedback,
+     [feedbackType]: feedback[feedbackType] + 1
   
-  );
-
+});
 
  }
+ const resetFeedback = () => {
+ setFeedback({
+  good: 0,
+  neutral: 0,
+  bad: 0 
+ }) 
+ }
+ const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
+ const positiveFeedback = totalFeedback > 0 ?
+ Math.round((feedback.good / totalFeedback) * 100) : 0
+ 
   return (
     <>
       <Description/>   
       <Options 
+      showReset={totalFeedback > 0}
+      resetFeedback = {resetFeedback }
       updateFeedback={updateFeedback} />
       
-      { totalFeedback > 0 ? (< Feedback
+      { totalFeedback > 0 ? (
+      < Feedback
        good={feedback.good}
        bad={feedback.bad}
        neutral={feedback.neutral}
-      />}
-      <Notification  />
+       total={totalFeedback}
+       positive={positiveFeedback}
+     />
 
+     ) : (
+      <Notification  />
+    )}
     </>
       
   );
