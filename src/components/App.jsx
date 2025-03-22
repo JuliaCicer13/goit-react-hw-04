@@ -1,67 +1,48 @@
-import Feedback from './Feedback.jsx'; 
-import Options from './Options.jsx';
-import Notification from './Notification.jsx';
-import { useState, useEffect} from 'react';
-import Description from './Description.jsx';
+import ContactForm from './ContactForm/ContactForm';
+import SearchBox from './SearchBox/SearchBox';
+import ContactList from './ContactList/ContactList';
+
+import { useState} from 'react';
 
 export default function App () {
 
-const [feedback, setFeedback] = useState(() =>
-  {
-   const savedFeedback = localStorage.getItem('feedback')
-    if (savedFeedback !== null) {
-      return JSON.parse(savedFeedback);
-    }
-    return 0;
+  //  Фильтрация элементов в инпуте 
+
+  const [filters, setFilter] = useState('');
+
+  const filterUsers = users.filter(user => user.toLowerCase().include(filters.toLowerCase()))
+
+// Массив пользователей добавим их с помощью сеттера
+
+  const [users, setUsers] = useState([
+    {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+    {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+  ])
+
+// А здесь уже добавляем новых пользователей в форму
+
+ const addUser = (newUser) => {
+  setUsers((prevUsers) => {
+    return [...prevUsers, newUser];
   });
+ };
 
-useEffect(() => {
-  localStorage.setItem('feedback',JSON.stringify(feedback));
+//  удаляем пользователя
+const handleDelete = (userId) => {
+setUsers( prevUsers => {
+  return prevUsers.filter(users => users.id !== userId)
+})
+}
 
- }, [feedback]);
-
-
-const updateFeedback = feedbackType => {
- setFeedback({
-    ...feedback,
-     [feedbackType]: feedback[feedbackType] + 1
-  
-});
-
- }
- const resetFeedback = () => {
- setFeedback({
-  good: 0,
-  neutral: 0,
-  bad: 0 
- }) 
- }
- const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
- const positiveFeedback = totalFeedback > 0 ?
- Math.round((feedback.good / totalFeedback) * 100) : 0
-
- 
   return (
-    <>
-      <Description/>   
-      <Options 
-      showReset={totalFeedback > 0}
-      resetFeedback = {resetFeedback }
-      updateFeedback={updateFeedback} />
-      
-      { totalFeedback > 0 ? (
-      < Feedback
-       good={feedback.good}
-       bad={feedback.bad}
-       neutral={feedback.neutral}
-       total={totalFeedback}
-       positive={positiveFeedback}
-     />
-
-     ) : (
-      <Notification  />
-    )}
-    </>
+    <div>
+      <h1>Phonebook</h1>
+     <ContactForm onAdd={addUser}/>
+     <SearchBox filters={filters} onFilter={setFilter}/>
+     <ContactList users={filterUsers} onDelete={handleDelete}/>
+    </div>
       
   );
 };
