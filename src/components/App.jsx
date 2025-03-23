@@ -6,11 +6,7 @@ import { useState} from 'react';
 
 export default function App () {
 
-  //  Фильтрация элементов в инпуте 
-
-  const [filters, setFilter] = useState('');
-
-  const filterUsers = users.filter(user => user.toLowerCase().include(filters.toLowerCase()))
+ const [filters, setFilter] = useState('');
 
 // Массив пользователей добавим их с помощью сеттера
 
@@ -35,6 +31,9 @@ setUsers( prevUsers => {
   return prevUsers.filter(users => users.id !== userId)
 })
 }
+ //  Фильтрация элементов в инпуте 
+
+ const filterUsers = users.filter(user => user.name.toLowerCase().includes(filters))
 
   return (
     <div>
