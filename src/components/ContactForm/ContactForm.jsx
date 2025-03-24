@@ -1,71 +1,51 @@
-import { useId } from "react";
 import { Formik , Form,  Field} from 'formik';
 import css from "./ContactForma.module.css";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
+import {nanoid} from 'nanoid';
 
-export default function LoginForm ({onAdd}) {
-  const nameFieldId = useId();
-  const numberFieldId = useId();
-  const textareaId = useId();
-  const selectId = useId();
 
-  const FeedbackSchema = Yup.object().shape({
-     username: Yup.string().min(2, "Too Short!").max(50, "Too Long!").required("Required"),
-     number: Yup.string().email("Must be a valid email!").required("Required"),
-     message: Yup.string().min(3, "Too short").max(256, "Too long").required("Required"),
-     level: Yup.string().oneOf(["good", "neutral", "bad"]).required("Required")       
-    });
+const FeedbackSchema = Yup.object().shape({
+  name: Yup.string().min(3, "Too Short!").max(50, "Too Long!").required("Required"),
+  number: Yup.string().min(3, "Too short").max(50, "Too long").required("Required"),
+ });
 
-   const initialValues = {
-     username: "",
-     number: "",
-     message: "",
-     level:"good"
-   }
+const initialValues = {
+  name: "",
+  number: "",
+};
+
+export default function ContactForm ({onSubmit}) {
    const handleSubmit = (values, actions ) => {
-     actions.resetForm()
-     console.log(values)
+    const newContact = {
+      id: nanoid(),
+      ...values,
+    };
+     onSubmit(newContact);
+     actions.resetForm();
+    
    }
 
   return(
     <div className={css.containerForm}>
-    <Formik 
-     initialValue={{initialValues}}
-     onSubmit = {handleSubmit}
+    <Formik initialValues={initialValues}
+     onSubmit={handleSubmit}
      validationSchema={FeedbackSchema}>
 
-    <Form className={css.form} onSubmit={handleSubmit}>
+    <Form className={css.form}>
       <div>
-          <label htmlFor={nameFieldId}>Username</label>
-          <Field className={css.input} type="text" name="username" id={nameFieldId} />
-          <ErrorMessage className={css.error}  name="username" component="span" />
+          <label htmlFor="name">Name</label>
+          <Field className={css.input} type="text" name="name" />
+          <ErrorMessage className={css.error}  name="name" component="span" />
       </div>
     
         <div>
-           <label htmlFor={numberFieldId}>Number</label>
-           <Field className={css.input} type="text" name="number" id={numberFieldId} />
+           <label htmlFor="number">Number</label>
+           <Field className={css.input} type="text" name="number" />
            <ErrorMessage className={css.error}  name="number" component="span" />
         </div>
-
-      <div>
-         <label htmlFor={textareaId}>Message</label>
-         <Field as="textarea" name="message" id={textareaId} rows="5"></Field>
-         <ErrorMessage className={css.error} name="username" component="span" />
-      </div>
-        
-
-        <div>
-            <label htmlFor={selectId}>Select</label>
-                <Field as="select">
-                    <option value="o1">Option 1</option>
-	                  <option value="o2">Option 2</option>
-	                  <option value="o3">Option 3</option>
-                   <ErrorMessage className={css.error}  name="username" component="span" />
-                 </Field> 
-        </div>
-    
-      <button className={css.formButton} onClick={onAdd}></button>
+      
+      <button className={css.formButton} type="submit">Add contact</button>
     </Form>
    
     </Formik>

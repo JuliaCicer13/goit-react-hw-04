@@ -28,7 +28,8 @@ export default function App () {
 //  удаляем пользователя
 const handleDelete = (userId) => {
 setUsers( prevUsers => {
-  return prevUsers.filter(users => users.id !== userId)
+  const updateUsers = prevUsers.filter(users => users.id !== userId);
+  return updateUsers;
 })
 }
  //  Фильтрация элементов в инпуте 
@@ -38,7 +39,7 @@ setUsers( prevUsers => {
   return (
     <div>
       <h1>Phonebook</h1>
-     <ContactForm onAdd={addUser}/>
+     <ContactForm onSubmit={addUser}/>
      <SearchBox filters={filters} onFilter={setFilter}/>
      <ContactList users={filterUsers} onDelete={handleDelete}/>
     </div>

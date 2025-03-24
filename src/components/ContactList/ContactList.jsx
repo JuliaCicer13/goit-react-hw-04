@@ -5,10 +5,10 @@ export default function ContactList ({users, onDelete}) {
         <ul className={styles.list}>
             {users.map(user => (
             <Contacts
-            onDelete={onDelete}
             key={user.id}
             name={user.name}
             number={user.number}
+            onDelete={onDelete}
             />
             ))}
         </ul>

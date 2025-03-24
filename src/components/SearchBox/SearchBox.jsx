@@ -6,7 +6,7 @@ export default function SearchBox({value, onFilter}) {
     return(
         <div className={styles.container}>
         <label className={styles.label} htmlFor={LabelId}>Find contacts by name</label>
-        <input type="text" value={value} onChange={ e => onFilter(e.target.value)} />
+        <input type="text" value={value} onChange={onFilter} />
         </div>
     )
 }
