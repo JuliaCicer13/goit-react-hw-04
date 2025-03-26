@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react';
 import axios from "axios";
-
+import ArticleList from './Articles/ArticleList';
 
 export default function App () {
 
@@ -21,8 +21,9 @@ useEffect(() => {
   
   return (
     <div>
-     
-    
+      <h1>Latest articles</h1>
+
+      {articles.length > 0 && <ArticleList items={articles}/>}
     </div>
       
   );
