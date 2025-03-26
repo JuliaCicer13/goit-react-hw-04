@@ -5,7 +5,7 @@ import Loader from './Loader/Loader.jsx';
 import Error from './Error/Error.jsx';
 import SearchForm from './SearchForm/SearchForm.jsx'
 // 1. Імпортуємо HTTP-функцію
-import { fetchArticlesWithTopic } from "../articles-api.js";
+import { fetchArticlesWithTopic } from "./articles-api.js";
 
 export default function App () {
 // 1. Оголошуємо стан
