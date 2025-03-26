@@ -1,32 +1,52 @@
 import { useState, useEffect} from 'react';
-import axios from "axios";
-import ArticleList from './Articles/ArticleList';
+import ArticleList from './Articles/ArticleList.jsx';
+import Article from './Articles/Article.jsx';
+import Loader from './Loader/Loader.jsx';
+import Error from './Error/Error.jsx';
+import SearchForm from './SearchForm/SearchForm.jsx'
+// 1. Імпортуємо HTTP-функцію
+import { fetchArticlesWithTopic } from "../articles-api.js";
 
 export default function App () {
-
 // 1. Оголошуємо стан
 const [articles, setArticles] = useState([]);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(false);
 
-useEffect(() => {
-  async function fetchArticles() {
-    const response = await axios.get(
-      "https://hn.algolia.com/api/v1/search?query=react"
-    );
-    // 2. Записуємо дані в стан
-    setArticles(response.data.hits);
+const handleSearch = async (topic) => {
+  try {
+    setArticles([]);
+    setError(false);
+    setLoading(true);
+    const data = await fetchArticlesWithTopic(topic);
+    setArticles(data);
+  } catch (error) {
+    setError(true);
+  } finally {
+    setLoading(false);
   }
+};
 
-  fetchArticles();
-}, []);
+
+/* Остальной код */
+
   
   return (
     <div>
       <h1>Latest articles</h1>
-
+      <ArticleList/>
+      <Article/>
+      <Loader/>
+      <Error/>
+      <SearchForm onSearch={handleSearch}/>
+      {loading && <Loader />}
+      {error && <Error />}
+      {loading && <p>Loading data, please wait...</p>}
+      {error && (<p>Whoops, something went wrong! Please try reloading this page!</p>)}
       {articles.length > 0 && <ArticleList items={articles}/>}
     </div>
       
   );
-};
 
+}
   

@@ -1,4 +1,4 @@
-import styles from 'Article.module.css';
+import styles from './Article.module.css';
 
 export default function ArticleList ({ items }) {
     <ul>
