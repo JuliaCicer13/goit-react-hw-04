@@ -1,25 +1,25 @@
-import { useState, useEffect} from 'react';
-import ArticleList from './Articles/ArticleList.jsx';
-import Article from './Articles/Article.jsx';
+import { useState} from 'react';
+import ImageGallery from './ImageGallery/ImageGallery.jsx'
 import Loader from './Loader/Loader.jsx';
-import Error from './Error/Error.jsx';
-import SearchForm from './SearchForm/SearchForm.jsx'
+import ErrorMessage from './ErrorMessage/ErrorMessage.jsx';
+import SearchBar from './SearchBar/SearchBar.jsx'
+
 // 1. Імпортуємо HTTP-функцію
-import { fetchArticlesWithTopic } from "./articles-api.js";
 
 export default function App () {
+
 // 1. Оголошуємо стан
-const [articles, setArticles] = useState([]);
+const [images, setImages] = useState([]);
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState(false);
 
-const handleSearch = async (topic) => {
+const handleSubmit = async (topic) => {
   try {
-    setArticles([]);
+    setImages([]);
     setError(false);
     setLoading(true);
     const data = await fetchArticlesWithTopic(topic);
-    setArticles(data);
+    setImages(data);
   } catch (error) {
     setError(true);
   } finally {
@@ -29,21 +29,18 @@ const handleSearch = async (topic) => {
 
 
 /* Остальной код */
-
-  
   return (
     <div>
-      <h1>Latest articles</h1>
-      <ArticleList/>
-      <Article/>
+      <h1>List of images</h1>
+      <ImageGallery/>
       <Loader/>
-      <Error/>
-      <SearchForm onSearch={handleSearch}/>
+      <ErrorMessage/>
+      <SearchBar onSubmit={handleSubmit}/>
       {loading && <Loader />}
-      {error && <Error />}
+      {error && <ErrorMessage />}
       {loading && <p>Loading data, please wait...</p>}
       {error && (<p>Whoops, something went wrong! Please try reloading this page!</p>)}
-      {articles.length > 0 && <ArticleList items={articles}/>}
+      {images.length > 0 && <ImageGallery items={images}/>}
     </div>
       
   );
