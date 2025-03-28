@@ -43,17 +43,18 @@ export default function App () {
 const [images, setImages] = useState([]);
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState(false);
+const [page, setPage] = useState(1);
 const [color, setColor] = useState("#ffffff");
 
-
-
   // Тут будемо виконувати HTTP-запит
-  const handleSearch = async (images) => {
+
+  const handleSearch = async (query) => {
     try {
       setImages([]);
+      setPage(1);
       setError(false);
       setLoading(true);
-      const data = await fetchImagesWithTopic(images);
+      const data = await fetchImagesWithTopic(query, 1);
       setImages(data.hits);
     } catch (error) {
       setError(true);
@@ -62,6 +63,20 @@ const [color, setColor] = useState("#ffffff");
     }
   };
 
+  const handleLoadMore = async (query) => {
+    try {
+      setLoading(true);
+      const nextPage = page + 1;
+      setPage(nextPage);
+      const data = await fetchImagesWithTopic(query, nextPage);
+        setImages(prevImages =>
+        [...prevImages, ...data.hits]);
+    } catch (error) {
+         setError(true);
+    } finally {
+      setLoading(false)
+    }
+  }
 
 /* Остальной код */
   return (
@@ -83,7 +98,10 @@ const [color, setColor] = useState("#ffffff");
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-     {images.length > 0 && <LoadMoreBtn message="Load more"/>} 
+     {images.length > 0 && <LoadMoreBtn 
+     message="Load more"
+     onLoadMore={handleLoadMore}
+     isDisabled={loading}/>} 
       <div>
       <button onClick={openModal}>Open Modal</button>
       <ImageModal

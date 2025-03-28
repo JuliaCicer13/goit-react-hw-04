@@ -1,7 +1,13 @@
-export default function LoadMoreBtn({message}) {
+import styles from './LoadMoreBtn.module.css'
+export default function LoadMoreBtn({message, onLoadMore, isDisabled}) {
     return (
         <>
-        <button type="button">{message}</button>
+        <button className={isDisabled ? styles.disable : styles.enable}
+         type="button"
+         onClick={onLoadMore}
+         disabled={isDisabled}
+         >{message}
+         </button>
         </>
     )
 }
