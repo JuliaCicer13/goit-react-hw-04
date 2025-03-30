@@ -1,18 +1,17 @@
-import ImageCard from './ImageCard';
+import ImageCard from '../GalleryCard/ImageCard.jsx';
 
 export default function ImageGallery({images}) {
     return (
-        <>
         <ul>
-	{images.map(({id, urls, alt_description }) => (
+	{images.map(({id, imageUrl, alt }) => (
     <li key={id} >
         <ImageCard
-        imageUrl={urls.small}
-        alt={alt_description}
+        imageUrl={imageUrl || "fallback-image-url.jpg"}
+        alt={alt || "No description"}
         />
+        
     </li>
     ))}
-       </ul>
-        </>
+       </ul>    
   )
 }
