@@ -20,24 +20,8 @@ import { fetchImagesWithTopic } from "../images-api.js";
     },
   };
  
-  ImageModal.setAppElement('#yourAppElement');
 
 export default function App () {
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = '#f00';
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
 
 // 1. Оголошуємо стан
 const [images, setImages] = useState([]);
@@ -45,6 +29,8 @@ const [loading, setLoading] = useState(false);
 const [error, setError] = useState(false);
 const [page, setPage] = useState(1);
 const [color, setColor] = useState("#ffffff");
+
+
 
   // Тут будемо виконувати HTTP-запит
 
@@ -82,7 +68,6 @@ const [color, setColor] = useState("#ffffff");
   return (
     <div>
       <h1>List of images</h1>
-      <ImageGallery/>
 
       <SearchBar onSearch={handleSearch}/>
       {loading && <ClipLoader />}
@@ -98,34 +83,22 @@ const [color, setColor] = useState("#ffffff");
         aria-label="Loading Spinner"
         data-testid="loader"
       />
+      
      {images.length > 0 && <LoadMoreBtn 
-     message="Load more"
-     onLoadMore={handleLoadMore}
-     isDisabled={loading}/>} 
+      message="Load more"
+      onLoadMore={handleLoadMore}
+      isDisabled={loading}/>} 
+      
       <div>
-      <button onClick={openModal}>Open Modal</button>
       <ImageModal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-        <button onClick={closeModal}>close</button>
-        <div>I am a modal</div>
-        <form>
-          <input />
-          <button>tab navigation</button>
-          <button>stays</button>
-          <button>inside</button>
-          <button>the modal</button>
-        </form>
       </ImageModal>
     </div>
     </div>
   );
 }
 
-ReactDOM.render(<App />, appElement);
+
   
