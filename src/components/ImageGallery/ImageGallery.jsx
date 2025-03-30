@@ -6,8 +6,8 @@ export default function ImageGallery({images}) {
 	{images.map(({id, imageUrl, alt }) => (
     <li key={id} >
         <ImageCard
-        imageUrl={imageUrl || "fallback-image-url.jpg"}
-        alt={alt || "No description"}
+        imageUrl={imageUrl }
+        alt={alt}
         />
         
     </li>

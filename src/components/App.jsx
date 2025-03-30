@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState, useEffect} from 'react';
 import ImageGallery from './ImageGallery/ImageGallery.jsx'
 import ErrorMessage from './ErrorMessage/ErrorMessage.jsx';
 import SearchBar from './SearchBar/SearchBar.jsx';
@@ -32,16 +32,18 @@ const [page, setPage] = useState(1);
 const [searchTerm, setSearchTerm] = useState("");
 
   // Тут будемо виконувати HTTP-запит
+  const handleSearch = (topic) => {
+    setSearchTerm(topic)
+    setPage(1);
+  }
+ useEffect (() => {
+    const getData = async () => {
+    if (!searchTerm) return;
+    setError(false);
+    setLoading(true);
 
-  const handleSearch = async (query) => {
     try {
-      setSearchTerm(query);
-      setImages([]);
-      setPage(1);
-      setError(false);
-      setLoading(true);
-  
-      const data = await fetchImagesWithTopic(query, 1);
+      const data = await fetchImagesWithTopic(searchTerm, page);
       console.log("API Response (handleSearch):", data); 
   
       if (!data || !data.results) {
@@ -54,7 +56,7 @@ const [searchTerm, setSearchTerm] = useState("");
         imageUrl: item.urls.small || "default.jpg"
       }));
   
-      setImages(imagesArray);
+      setImages(prevImages => (page === 1 ? imagesArray : [...prevImages, ...imagesArray]));
       console.log("Images array:", imagesArray);
     } catch (error) {
       setError(true);
@@ -63,12 +65,15 @@ const [searchTerm, setSearchTerm] = useState("");
       setLoading(false);
     }
   };
-
+  getData();
+  }, [searchTerm, page]);
+ 
   const handleLoadMore = async () => {
     try {
       setLoading(true);
       const nextPage = page + 1;
       setPage(nextPage);
+  
       const data = await fetchImagesWithTopic(searchTerm, nextPage);
       console.log("API Response (handleLoadMore):", data);
   
@@ -76,15 +81,28 @@ const [searchTerm, setSearchTerm] = useState("");
         throw new Error("Invalid API response structure");
       }
   
-      setImages(prevImages => [...prevImages, ...data.results]);
+      setImages(prevImages => {
+        const newImages = data.results.map(item => ({
+          id: item.id,
+          alt: item.alt_description || "No description",
+          imageUrl: item.urls.small || "default.jpg",
+        }));
+  
+        // Создаем Set для удаления дубликатов по id
+        const uniqueImages = [
+          ...new Map([...prevImages, ...newImages].map(img => [img.id, img])).values(),
+        ];
+  
+        return uniqueImages;
+      });
+  
     } catch (error) {
       setError(true);
       console.error("Error loading more images:", error);
     } finally {
-      setLoading(false);
+      setTimeout(() => setLoading(false), 500);
     }
   };
-
 /* Остальной код */
   return (
     <div className={styles.container}>
@@ -106,7 +124,7 @@ const [searchTerm, setSearchTerm] = useState("");
       )}
       {error && <ErrorMessage message="Whoops, something went wrong! Please try reloading this page!" />}
       {Array.isArray(images) && images.length > 0 && <ImageGallery images={images}/>}
-      {images.length > 0 && 
+      {images.length > 0 &&
         (<LoadMoreBtn 
           message="Load more"
           onLoadMore={handleLoadMore}
