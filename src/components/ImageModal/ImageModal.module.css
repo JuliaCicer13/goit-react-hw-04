@@ -1,0 +1,25 @@
+.modal {
+    margin-left: 300px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.images{
+    width: 900px;
+    height: 700px;
+    border: solid;
+    border-radius: 5px;
+    border-color: rgb(248, 0, 153);
+   
+}
+.closeButton{
+  width: 64px;
+  margin-top: 20px;  
+  right: 40%;
+  position:absolute;
+  color: blueviolet;
+  background-color: deeppink;
+  cursor: pointer;
+}

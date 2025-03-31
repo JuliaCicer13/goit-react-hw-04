@@ -6,7 +6,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 import ImageModal from './ImageModal/ImageModal.jsx';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn.jsx'
 import { fetchImagesWithTopic } from "../images-api.js";
-import styles from './App.module.css'
+import styles from './App.module.css';
+import React from 'react';
 // 1. Імпортуємо HTTP-функцію
 
   // Модальное окно
@@ -22,6 +23,7 @@ import styles from './App.module.css'
   };
  
 
+
 export default function App () {
 
 // 1. Оголошуємо стан
@@ -30,7 +32,20 @@ const [loading, setLoading] = useState(false);
 const [error, setError] = useState(false);
 const [page, setPage] = useState(1);
 const [searchTerm, setSearchTerm] = useState("");
+const [modalIsOpen, setIsOpen] = React.useState(false);
+const [selectedImage, setSelectedImage] = useState(null);
+const [selectedAlt, setSelectedAlt] = useState("");
 
+function openModal(imageUrl, alt) {
+setIsOpen(true);
+setSelectedImage(imageUrl);
+setSelectedAlt(alt);
+}
+
+function closeModal() {
+  setIsOpen(false);
+  setSelectedImage(null);
+}
   // Тут будемо виконувати HTTP-запит
   const handleSearch = (topic) => {
     setSearchTerm(topic)
@@ -88,7 +103,7 @@ const [searchTerm, setSearchTerm] = useState("");
           imageUrl: item.urls.small || "default.jpg",
         }));
   
-        // Создаем Set для удаления дубликатов по id
+     
         const uniqueImages = [
           ...new Map([...prevImages, ...newImages].map(img => [img.id, img])).values(),
         ];
@@ -123,7 +138,7 @@ const [searchTerm, setSearchTerm] = useState("");
       </>
       )}
       {error && <ErrorMessage message="Whoops, something went wrong! Please try reloading this page!" />}
-      {Array.isArray(images) && images.length > 0 && <ImageGallery images={images}/>}
+      {Array.isArray(images) && images.length > 0 && <ImageGallery images={images} onImageClick={openModal}/>}
       {images.length > 0 &&
         (<LoadMoreBtn 
           message="Load more"
@@ -133,7 +148,11 @@ const [searchTerm, setSearchTerm] = useState("");
          )} 
       <div>
       <ImageModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
         style={customStyles}
+        imageUrl={selectedImage}
+        alt={selectedAlt}
         contentLabel="Example Modal"
       />
       </div>
