@@ -48,7 +48,8 @@ function closeModal() {
 }
   // Тут будемо виконувати HTTP-запит
   const handleSearch = (topic) => {
-    setSearchTerm(topic)
+    setSearchTerm(topic);
+    setImages([]);
     setPage(1);
   }
  useEffect (() => {
@@ -84,40 +85,9 @@ function closeModal() {
   }, [searchTerm, page]);
  
   const handleLoadMore = async () => {
-    try {
-      setLoading(true);
-      const nextPage = page + 1;
-      setPage(nextPage);
-  
-      const data = await fetchImagesWithTopic(searchTerm, nextPage);
-      console.log("API Response (handleLoadMore):", data);
-  
-      if (!data || !data.results) {
-        throw new Error("Invalid API response structure");
-      }
-  
-      setImages(prevImages => {
-        const newImages = data.results.map(item => ({
-          id: item.id,
-          alt: item.alt_description || "No description",
-          imageUrl: item.urls.small || "default.jpg",
-        }));
-  
-     
-        const uniqueImages = [
-          ...new Map([...prevImages, ...newImages].map(img => [img.id, img])).values(),
-        ];
-  
-        return uniqueImages;
-      });
-  
-    } catch (error) {
-      setError(true);
-      console.error("Error loading more images:", error);
-    } finally {
-      setTimeout(() => setLoading(false), 500);
-    }
+   setPage(prevPage => prevPage + 1);
   };
+
 /* Остальной код */
   return (
     <div className={styles.container}>
